@@ -3,31 +3,28 @@
 ## To Run
 
 ### Frontend
+
 `cd frontend`
 
-*Only required intially:*
+_Only required intially:_
 `npm install`
 
 `npm run dev`
 
 ### Backend
+
 `cd backend`
 
-*Only required intially:*
+_Only required intially:_
 `npm install`
 
 `node index.js`
 
-*Note: Make sure WAMP server is running, that runs the SQL database!*
+_Note: Make sure WAMP server is running, that runs the SQL database!_
 
 ## Api Endpoints
 
-| Endpoint      | Method | Description | Body |
-| ------------- | ------------- | ------------- | ------------- |
-| Content Cell  | Content Cell  | Content Cell  | ```Hello world``` |
-| Content Cell  | Content Cell  | Content Cell  | ```Hello world``` |
-
-
-
-
-
+| Endpoint      | Method | Description                           | Body                          |
+| ------------- | ------ | ------------------------------------- | ----------------------------- |
+| `/api/events` | `POST` | Adds a new event to the events table. | `event_id, time, description` |
+| `/api/events` | `GET`  | Gets ALL events from the event table. | `None`                        |
