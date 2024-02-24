@@ -61,3 +61,6 @@ _Note: Make sure WAMP server is running, that runs the SQL database!_
 | Owns          | `Event_ID, RSO_ID`                       | An RSO owns an RSO_Event.                 |
 | Join          | `UID, RSO_ID`                            | A user joins an RSO.                      |
 | At            | `Loc_ID, Event_ID`                       | An event is at a location.                |
+| Creates       |                                          |
+| Creates       |                                          |
+| Creates       |                                          |
