@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ucf_logo from "./assets/ucf_logo.png";
+import ucf_logo from "../assets/ucf_logo.png";
 
 export default function App() {
   const [events, setEvents] = useState([]);
@@ -10,6 +10,7 @@ export default function App() {
 
   return (
     <div className="mx-auto mt-[2vh] lg:w-[70vw] xl:w-[60vw] 2xl:w-[1000px] w-[100vw] h-[80vh]">
+      {/* Top Header */}
       <div className="flex">
         <img src={ucf_logo} className="w-16" />
         <div className="font-bold my-auto ml-5 text-3xl">
@@ -17,15 +18,18 @@ export default function App() {
         </div>
       </div>
       <div className="grid grid-cols-2 mt-[3vh] gap-x-10 divide-x">
+        {/* Left Side */}
         <div className="mx-auto">
           <div>Add new event:</div>
           <EventForm />
         </div>
+        {/* Right Side */}
         <div className="space-y-5">{showEvents()}</div>
       </div>
     </div>
   );
 
+  // Fetches events from backend
   async function getevents() {
     const response = await fetch("http://localhost:3002/api/events", {
       method: "GET",
@@ -37,13 +41,21 @@ export default function App() {
     return setEvents(data);
   }
 
+  // Displays events as list of cards
   function showEvents() {
-    return events == [] ? (
-      <p>Loading Events</p>
+    return events.length === 0 ? ( // If no events, show loading cards
+      <div className="space-y-5">
+        <LoadingEventCard />
+        <LoadingEventCard />
+        <LoadingEventCard />
+        <LoadingEventCard />
+        <LoadingEventCard />
+        <LoadingEventCard />
+      </div>
     ) : (
+      // If events, show event cards
       events.map((e) => {
         const date = new Date(e.time);
-
         return (
           <div
             key={e.event_id}
@@ -61,12 +73,21 @@ export default function App() {
     );
   }
 
+  // Loading Event Card
+  function LoadingEventCard() {
+    return (
+      <div className="rounded-lg w-fit px-8 py-5 mx-auto min-w-72 h-32 bg-gray-50 animate-pulse"></div>
+    );
+  }
+
+  // Form to add new event
   function EventForm() {
     const [time, setTime] = useState("");
     const [description, setDescription] = useState("");
 
     return (
       <div className="grid grid-cols-1 w-fit space-y-5 mt-5">
+        {/* Description */}
         <textarea
           className="border rounded-lg shadow-lg w-fit px-8 py-5"
           cols={30}
@@ -76,6 +97,7 @@ export default function App() {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
+        {/* Time */}
         <input
           type="datetime-local"
           name="time"
@@ -85,6 +107,7 @@ export default function App() {
           required
           placeholder="Time"
         />
+        {/* Submit Form for creating new event */}
         <button
           className="w-fit bg-[#ffcc00] rounded px-3 py-1 hover:opacity-50"
           onClick={() => addNewEvent(time, description).then(getevents)}
@@ -95,6 +118,7 @@ export default function App() {
     );
   }
 
+  // Adds new event to backend
   async function addNewEvent(time, description) {
     const response = await fetch("http://localhost:3002/api/events", {
       method: "POST",
@@ -112,6 +136,7 @@ export default function App() {
   }
 }
 
+// Arrays for mapping integers days and months
 const days = [
   "Sunday",
   "Monday",
