@@ -1,18 +1,30 @@
 import RightSideMenu from "../../../Components/RightSideMenu";
+import { formatDate } from "../../../Components/helpers";
+import { useContext } from "react";
+import { Context } from "../../../ProjectContext";
+
 import star_filled from "../../../assets/star-solid.svg";
 import star_empty from "../../../assets/star-regular.svg";
 import send from "../../../assets/arrow-right-solid.svg";
-
-import { formatDate } from "../../../Components/helpers";
+import xmark from "../../../assets/xmark-solid.svg";
 
 export default function () {
+  const { setShowRightSideMenu } = useContext(Context);
+
   return (
     <RightSideMenu>
-      <div>
-        <div className="bg-[#ffcc00] pt-7 pb-3 border-b-2 border-black px-5">
-          <div className="font-bold text-lg">Comments</div>
+      <div className="rounded-lg overflow-hidden">
+        <div className="bg-[#ffcc00] pt-7 pb-5 border-b-[3px] border-black px-5">
+          <div className="font-extrabold text-lg tracking-wide">
+            Comments 💭
+          </div>
+          <img
+            onClick={() => setShowRightSideMenu(false)}
+            src={xmark}
+            className="w-[14px] absolute top-3 right-3 cursor-pointer hover:opacity-50"
+          />
         </div>
-        <div className="space-y-5 mt-3 h-[75vh] overflow-y-scroll border-b mb-5 px-5">
+        <div className="space-y-5 pt-3 h-[75vh] overflow-y-scroll border-b px-5">
           <CommentCard
             text="Officia officia tempor excepteur cupidatat consequat."
             rating={1}
@@ -41,7 +53,7 @@ export default function () {
         </div>
         <div className="flex px-5">
           <textarea
-            className="w-full border rounded shadow-lg px-3 py-4 flex justify-center"
+            className="w-full border rounded shadow-lg px-3 my-4 py-4 flex justify-center"
             cols={30}
             rows={2}
             name="comment"

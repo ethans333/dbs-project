@@ -41,7 +41,7 @@ function MenuLabel({ src, text, page }) {
       onClick={() => navigate(page)}
     >
       <img src={src} className="w-8  mx-auto" />
-      <div className="mt-3 text-sm opacity-80">{text}</div>
+      <div className="mt-3 text-sm opacity-80 font-[550]">{text}</div>
     </div>
   );
 }

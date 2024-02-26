@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 import ucf_logo from "../../assets/ucf_logo.png";
 import CommentSidebar from "./Components/CommentSidebar";
 import { formatDate } from "../../Components/helpers";
+import { useContext } from "react";
+import { Context } from "../../ProjectContext";
 
 export default function () {
   const [events, setEvents] = useState([]);
+
+  const { setShowRightSideMenu } = useContext(Context);
 
   useEffect(() => {
     getevents();
@@ -64,6 +68,9 @@ export default function () {
           >
             <p>{formatDate(date)}</p>
             <p>{e.description}</p>
+            <div className="text-blue-500" onClick={() => setShowSidebar(true)}>
+              Comment
+            </div>
           </div>
         );
       })
