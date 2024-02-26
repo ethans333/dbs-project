@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import ucf_logo from "../assets/ucf_logo.png";
+import ucf_logo from "../../assets/ucf_logo.png";
+import CommentSidebar from "./Components/CommentSidebar";
 
-export default function App() {
+export default function () {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -25,6 +26,8 @@ export default function App() {
         </div>
         {/* Right Side */}
         <div className="space-y-5">{showEvents()}</div>
+        {/* Right Sidebar */}
+        <CommentSidebar />
       </div>
     </div>
   );
@@ -45,9 +48,6 @@ export default function App() {
   function showEvents() {
     return events.length === 0 ? ( // If no events, show loading cards
       <div className="space-y-5">
-        <LoadingEventCard />
-        <LoadingEventCard />
-        <LoadingEventCard />
         <LoadingEventCard />
         <LoadingEventCard />
         <LoadingEventCard />
@@ -76,7 +76,7 @@ export default function App() {
   // Loading Event Card
   function LoadingEventCard() {
     return (
-      <div className="rounded-lg w-fit px-8 py-5 mx-auto min-w-72 h-32 bg-gray-50 animate-pulse"></div>
+      <div className="rounded-lg w-fit px-8 py-5 mx-auto min-w-72 h-32 bg-gray-100 animate-pulse"></div>
     );
   }
 

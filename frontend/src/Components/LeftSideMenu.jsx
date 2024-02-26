@@ -26,7 +26,6 @@ export default function (props) {
       </div>
       <div className="mx-auto mt-[2vh] lg:w-[70vw] xl:w-[60vw] 2xl:w-[1000px] w-[100vw] h-[80vh]">
         {/* Content Area */}
-        <div>{userType}</div>
         {props.children}
       </div>
     </div>
