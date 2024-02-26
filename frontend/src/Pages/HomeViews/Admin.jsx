@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ucf_logo from "../../assets/ucf_logo.png";
 import CommentSidebar from "./Components/CommentSidebar";
+import { formatDate } from "../../Components/helpers";
 
 export default function () {
   const [events, setEvents] = useState([]);
@@ -34,7 +35,7 @@ export default function () {
 
   // Fetches events from backend
   async function getevents() {
-    const response = await fetch("http://localhost:3002/api/events", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -61,11 +62,7 @@ export default function () {
             key={e.event_id}
             className="border rounded-lg shadow-lg w-fit px-8 py-5 mx-auto min-w-72"
           >
-            <p>
-              {`${days[date.getDay()]}, ${
-                months[date.getMonth()]
-              } ${date.getDate()}, ${date.getFullYear()}`}
-            </p>
+            <p>{formatDate(date)}</p>
             <p>{e.description}</p>
           </div>
         );
@@ -120,7 +117,7 @@ export default function () {
 
   // Adds new event to backend
   async function addNewEvent(time, description) {
-    const response = await fetch("http://localhost:3002/api/events", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -135,28 +132,3 @@ export default function () {
     return data;
   }
 }
-
-// Arrays for mapping integers days and months
-const days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
