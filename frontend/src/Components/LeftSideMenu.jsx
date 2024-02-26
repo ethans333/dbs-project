@@ -15,10 +15,10 @@ export default function (props) {
       <div className="fixed left-0 h-screen bg-[#ffcc00]">
         <div className="px-6 space-y-16 mt-16">
           <MenuLabel src={house} text="Home" page="/" />
-          {userType != "USER" && (
+          {userType != import.meta.env.VITE_USER && (
             <MenuLabel src={org} text="RSOs" page="/rsos" />
           )}
-          {userType == "SUPER_ADMIN" && (
+          {userType == import.meta.env.VITE_SUPER_ADMIN && (
             <MenuLabel src={admin} text="Admins" page="/admins" />
           )}
           <MenuLabel src={gear} text="Settings" page="/settings" />

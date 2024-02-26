@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const Context = createContext();
 
 export default function (props) {
-  const [userType, setUserType] = useState("SUPER_ADMIN");
+  const [userType, setUserType] = useState(import.meta.env.VITE_SUPER_ADMIN);
 
   return (
     <div>
