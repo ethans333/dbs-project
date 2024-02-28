@@ -32,6 +32,54 @@ app.post("/api/events", (req, res) => {
   );
 });
 
+// Route to get a specific event by ID
+app.get("/api/events/:id", (req, res) => {
+  const eventId = req.params.id;
+  db.query("SELECT * FROM events WHERE event_id = ?", [eventId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      if (result.length > 0) {
+        res.send(result[0]);
+      } else {
+        res.status(404).send("Event not found");
+      }
+    }
+  });
+});
+
+// Route to update an existing event
+app.put("/api/events/:id", (req, res) => {
+  const eventId = req.params.id;
+  const { time, description } = req.body;
+  db.query(
+    "UPDATE events SET time = ?, description = ? WHERE event_id = ?",
+    [time, description, eventId],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+// Route to delete an event
+app.delete("/api/events/:id", (req, res) => {
+  const eventId = req.params.id;
+  db.query("DELETE FROM events WHERE event_id = ?", [eventId], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}/api`);
 });
