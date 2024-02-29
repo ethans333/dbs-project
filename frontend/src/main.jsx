@@ -10,8 +10,7 @@ import RSOs from "./Pages/RSOs.jsx";
 import Admins from "./Pages/Admins.jsx";
 import Settings from "./Pages/Settings.jsx";
 import Login from "./Pages/Auth/Login.jsx";
-// import Signup from "./Pages/Signup.jsx";
-// hello world
+import Signup from "./Pages/Auth/Signup.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -19,7 +18,7 @@ const router = createBrowserRouter([
   { path: "/admins", element: <Admins /> },
   { path: "/settings", element: <Settings /> },
   { path: "/login", element: <Login /> },
-  // { path: "/signup", element: <Signup /> },
+  { path: "/signup", element: <Signup /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
