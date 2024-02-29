@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 
 export default function () {
@@ -7,6 +8,8 @@ export default function () {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmpassword] = useState("");
+
+  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -79,7 +82,13 @@ export default function () {
             SignUp
           </button>
           <p className="links">
-            <a onClick={() => {}}>Already have an account?</a>
+            <a
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Already have an account?
+            </a>
           </p>
         </form>
       </div>

@@ -1,11 +1,14 @@
 import { useState, useRef } from "react";
 import "./Auth.css";
+import { useNavigate } from "react-router-dom";
 
 export default function loginForm() {
   const loginInputRef = useRef();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +59,13 @@ export default function loginForm() {
             Login
           </button>
           <p className="links">
-            <a onClick={() => {}}>Do not have an account?</a>
+            <a
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Do not have an account?
+            </a>
           </p>
           <p className="links">
             <a onClick={() => {}}>Forgot Password?</a>
