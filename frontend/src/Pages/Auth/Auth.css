@@ -1,0 +1,108 @@
+.app{
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('https://th.bing.com/th/id/R.1a660f814d1778902b7fb1e0a4227040?rik=R0LBBDSeBC9Cdg&pid=ImgRaw&r=0');
+    background-size: cover;
+    
+
+
+}
+
+#login{
+    margin: 0 35px;
+    
+}
+
+
+.login__form,
+.signup__form{
+    
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 0;
+    
+}
+ .logo{
+    /* make the logo smaller */
+    width: 40px;
+    height: 40px;
+ }
+.title{
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 0;
+    color: black;
+    font-weight: 600;
+    font-size: 30px;   
+}
+
+.form--group{
+
+   
+}
+
+.label, .input{
+    display: block;
+}
+
+.label{
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+.input:focus{
+    outline: none;
+    border-color: #ffcb09;
+}
+
+.submit--button{
+    width: 30%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color:black;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #ffcb09;
+    transition: background-color 0.3s ease;
+}
+
+.submit--button:hover{
+    background-color: rgba(255, 203, 9, 0.7);
+}
+
+.submit--button:active{
+   transform: scale(0.95);
+}
+
+
+.links{
+    color:#cc9f07;
+    text-decoration: none;
+    transition: text-decoration 0.2s ease;
+    cursor: pointer;
+    margin: 10px;
+    font-weight: 500;
+    font-size: 15px;
+
+}
+.links:hover{
+    text-decoration: underline;
+}
+
+.links:active{
+    transform: scale(1.02);
+}
