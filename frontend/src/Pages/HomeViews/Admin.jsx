@@ -4,9 +4,14 @@ import CommentSidebar from "./Components/CommentSidebar";
 import { formatDate } from "../../Components/helpers";
 import { useContext } from "react";
 import { Context } from "../../ProjectContext";
+import Dropdown from "react-dropdown";
+import "react-dropdown/style.css";
 
 export default function () {
+  const [focusedEvent, setFocusedEvent] = useState("");
   const [events, setEvents] = useState([]);
+  const [eventType, setEventType] = useState("");
+  const [rso, setRso] = useState("");
 
   const { setShowRightSideMenu } = useContext(Context);
 
@@ -32,7 +37,7 @@ export default function () {
         {/* Right Side */}
         <div className="space-y-5">{showEvents()}</div>
         {/* Right Sidebar */}
-        <CommentSidebar />
+        <CommentSidebar event_id={focusedEvent} />
       </div>
     </div>
   );
@@ -64,12 +69,40 @@ export default function () {
         return (
           <div
             key={e.event_id}
-            className="border rounded-lg shadow-lg w-fit px-8 py-5 mx-auto min-w-72"
+            className="border rounded-lg shadow px-8 py-5 mx-auto w-72 h-32"
           >
-            <p>{formatDate(date)}</p>
+            <p className="font-bold">{formatDate(date)}</p>
             <p>{e.description}</p>
-            <div className="text-blue-500" onClick={() => setShowSidebar(true)}>
-              Comment
+            <div className="flex">
+              <div
+                className="mr-auto text-red-400 cursor-pointer hover:opacity-50"
+                onClick={() => {
+                  // Delete event
+                  if (confirm("Are you sure you want to delete this event?")) {
+                    fetch(
+                      `${import.meta.env.VITE_API_URL}/events/${e.event_id}`,
+                      {
+                        method: "DELETE",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                      }
+                    ).then(() => getevents());
+                  }
+                }}
+              >
+                Delete
+              </div>
+              <div
+                className="text-blue-500 cursor-pointer hover:opacity-50"
+                onClick={() => {
+                  setShowRightSideMenu(true);
+                  console.log(e.event_id);
+                  setFocusedEvent(e.event_id);
+                }}
+              >
+                Comment
+              </div>
             </div>
           </div>
         );
@@ -93,7 +126,7 @@ export default function () {
       <div className="grid grid-cols-1 w-fit space-y-5 mt-5">
         {/* Description */}
         <textarea
-          className="border rounded-lg shadow-lg w-fit px-8 py-5"
+          className="border rounded shadow w-fit min-w-80 px-5 py-4"
           cols={30}
           rows={10}
           name="description"
@@ -107,10 +140,31 @@ export default function () {
           name="time"
           onChange={(e) => setTime(e.target.value)}
           value={time}
-          className="border rounded-lg shadow-lg w-fit px-8 py-5 w-full"
+          className="border rounded shadow w-fit px-8 py-5 w-full"
           required
           placeholder="Time"
         />
+        {/* Event Type */}
+        <Dropdown
+          options={["RSO Event", "Private Event"]}
+          placeholder="Event Type"
+          controlClassName="border rounded-lg shadow w-fit w-full"
+          menuClassName="border-none rounded-lg shadow-lg w-fit w-full"
+          value={eventType}
+          onChange={(e) => setEventType(e.value)}
+        />
+
+        {/* RSO */}
+        {eventType === "RSO Event" && (
+          <Dropdown
+            options={["RSO 1", "RSO 2", "RSO 3", "RSO 4", "RSO 5"]}
+            placeholder="Select an RSO"
+            controlClassName="border rounded-lg shadow w-fit w-full"
+            menuClassName="border-none rounded-lg shadow-lg w-fit w-full"
+            // value={eventType}
+            // onChange={(e) => setEventType(e.value)}
+          />
+        )}
         {/* Submit Form for creating new event */}
         <button
           className="w-fit bg-[#ffcc00] rounded px-3 py-1 hover:opacity-50"

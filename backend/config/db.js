@@ -18,9 +18,11 @@ db.connect((err) => {
     if (createDbErr) {
       console.error("Error creating database:", createDbErr);
     } else {
-      console.log("Database 'dbs_project_db' created (if it didn't exist already)");
+      console.log(
+        "Database 'dbs_project_db' created (if it didn't exist already)"
+      );
     }
-    db.end();
+    // db.end();
   });
 });
 

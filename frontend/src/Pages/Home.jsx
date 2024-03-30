@@ -2,6 +2,7 @@ import LeftSideMenu from "../Components/LeftSideMenu";
 import { useContext } from "react";
 import { Context } from "../ProjectContext";
 import AdminHome from "./HomeViews/Admin";
+import UserHome from "./HomeViews/User";
 
 export default function () {
   return <LeftSideMenu>{renderViews()}</LeftSideMenu>;
@@ -21,12 +22,4 @@ function renderViews() {
     default:
       return <div>Invalid User Type</div>;
   }
-}
-
-/*
-  - View to get events.
-  - View to get and add comments.
-*/
-function UserHome() {
-  return <div>User Home Page</div>;
 }

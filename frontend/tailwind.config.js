@@ -14,8 +14,8 @@ export default {
         },
       },
       animation: {
-        shiftRL: "shiftRL .3s ease-in-out",
-        shiftLR: "shiftLR .3s ease-in-out",
+        shiftRL: "shiftRL .1s ease-in-out",
+        shiftLR: "shiftLR .1s ease-in-out",
       },
     },
   },

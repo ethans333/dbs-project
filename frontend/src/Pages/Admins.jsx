@@ -1,10 +1,14 @@
 import LeftSideMenu from "../Components/LeftSideMenu";
 import { formatDate } from "../Components/helpers";
+import ucf_logo from "../assets/ucf_logo.png";
 
 export default function () {
   return (
     <LeftSideMenu>
-      <div className="font-bold text-2xl mt-[5vh]">Administrators</div>
+      <div className="flex mt-[3vh]">
+        <img src={ucf_logo} className="w-16" />
+        <div className="font-bold my-auto ml-5 text-3xl">Administrators</div>
+      </div>
       <div className="flex justify-center">
         <div className="mt-[10vh] overflow-y-scroll max-h-[80vh] p-5">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

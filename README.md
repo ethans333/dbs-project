@@ -20,7 +20,12 @@ _Only required intially:_
 
 `node index.js`
 
-_Note: Make sure WAMP server is running, that runs the SQL database!_
+### Running Wamp
+
+* Start WAMP
+* Go to the url `localhost`
+* Under Your Aliases select `PhpMyAdmin`
+* Login with username being `root` and password is *blank*
 
 ## Api Endpoints
 

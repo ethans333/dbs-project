@@ -11,12 +11,12 @@ export default function (props) {
       setAnimation("animate-shiftRL");
       setTimeout(() => {
         setShowState(true);
-      }, 300);
+      }, 100);
     } else {
       setAnimation("animate-shiftLR");
       setTimeout(function () {
         setShowState(false);
-      }, 300);
+      }, 0);
     }
   }, [showRightSideMenu]);
 
