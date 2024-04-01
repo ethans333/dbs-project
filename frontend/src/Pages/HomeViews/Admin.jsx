@@ -12,6 +12,13 @@ export default function () {
   const [events, setEvents] = useState([]);
   const [eventType, setEventType] = useState("");
   const [rso, setRso] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [address, setAddress] = useState("");
+  const [creatingLocation, setCreatingLocation] = useState(false);
+  const [locationAddress, setLocationAddress] = useState("");
+  const [locationName, setLocationName] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [latitude, setLatitude] = useState("");
 
   const { setShowRightSideMenu } = useContext(Context);
 
@@ -31,7 +38,7 @@ export default function () {
       <div className="grid grid-cols-2 mt-[3vh] gap-x-10 divide-x">
         {/* Left Side */}
         <div className="mx-auto">
-          <div>Add new event:</div>
+          <div className="font-bold">Add new event:</div>
           <EventForm />
         </div>
         {/* Right Side */}
@@ -124,6 +131,15 @@ export default function () {
 
     return (
       <div className="grid grid-cols-1 w-fit space-y-5 mt-5">
+        {/* Name */}
+        <input
+          className="border rounded shadow w-full px-3 py-1"
+          type="text"
+          name="eventName"
+          placeholder="Event Name"
+          onChange={(e) => setEventName(e.target.value)}
+          value={eventName}
+        />
         {/* Description */}
         <textarea
           className="border rounded shadow w-fit min-w-80 px-5 py-4"
@@ -134,6 +150,69 @@ export default function () {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
+        {/* Address */}
+        {!creatingLocation ? (
+          <div>
+            <Dropdown
+              options={["Location A", "Location B", "Location C"]}
+              placeholder="Event Address"
+              controlClassName="border rounded-lg shadow w-fit w-full"
+              menuClassName="border-none rounded-lg shadow-lg w-fit w-full"
+              value={address}
+              onChange={(e) => setAddress(e.value)}
+            />
+            <div
+              onClick={() => setCreatingLocation(true)}
+              className="text-blue-500 text-sm mt-1 text-right hover:opacity-50 cursor-pointer"
+            >
+              Create New Location
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p>Create New Location</p>
+            <input
+              className="border rounded shadow w-full px-3 py-1"
+              type="text"
+              name="locationName"
+              placeholder="Location Name"
+              onChange={(e) => setLocationName(e.target.value)}
+              value={locationName}
+            />
+            <input
+              className="border rounded shadow w-full px-3 py-1"
+              type="text"
+              name="address"
+              placeholder="Location Address"
+              onChange={(e) => setLocationAddress(e.target.value)}
+              value={locationAddress}
+            />
+            <input
+              className="border rounded shadow w-full px-3 py-1"
+              type="text"
+              name="longitude"
+              placeholder="Longitude"
+              onChange={(e) => setLongitude(e.target.value)}
+              value={longitude}
+            />
+            <div>
+              <input
+                className="border rounded shadow w-full px-3 py-1"
+                type="text"
+                name="latitude"
+                placeholder="Latitude"
+                onChange={(e) => setLatitude(e.target.value)}
+                value={latitude}
+              />
+              <div
+                onClick={() => setCreatingLocation(false)}
+                className="text-red-500 text-sm mt-1 text-right hover:opacity-50 cursor-pointer"
+              >
+                Cancel
+              </div>
+            </div>
+          </div>
+        )}
         {/* Time */}
         <input
           type="datetime-local"
@@ -146,7 +225,7 @@ export default function () {
         />
         {/* Event Type */}
         <Dropdown
-          options={["RSO Event", "Private Event"]}
+          options={["RSO Event", "Private Event", "Public Event"]}
           placeholder="Event Type"
           controlClassName="border rounded-lg shadow w-fit w-full"
           menuClassName="border-none rounded-lg shadow-lg w-fit w-full"
