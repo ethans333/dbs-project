@@ -25,10 +25,10 @@ app.get("/api/events", (req, res) => {
 
 // Route to create a new post
 app.post("/api/events", (req, res) => {
-  const { event_id, time, description } = req.body;
+  const { event_id, time, description, ename } = req.body;
   db.query(
-    "INSERT INTO events (event_id, time, description) VALUES (?, ?, ?)",
-    [event_id, time, description],
+    "INSERT INTO events (event_id, time, description, ename) VALUES (?, ?, ?, ?)",
+    [event_id, time, description, ename],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -129,6 +129,70 @@ app.get("/api/comments/:event_id", (req, res) => {
       res.send(result);
     }
   );
+});
+
+/*
+
+  RSOs
+
+*/
+
+// Route to create a new RSO
+app.post("/api/rso/:rso_id", (req, res) => {
+  const rso_id = req.params.rso_id;
+  const { name } = req.body;
+  db.query(
+    "INSERT INTO rso (rso_id, name) VALUES (?, ?)",
+    [rso_id, name],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to get all RSOs
+app.get("/api/rso", (req, res) => {
+  db.query("SELECT * FROM rso", (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    res.send(result);
+  });
+});
+
+/*
+
+  Location
+
+*/
+
+// Route to create a new location
+app.post("/api/location/:location_id", (req, res) => {
+  const location_id = req.params.location_id;
+  const { lname, address, longitude, latitude } = req.body;
+  db.query(
+    "INSERT INTO location (location_id, lname, address, longitude, latitude) VALUES (?, ?, ?, ?, ?)",
+    [location_id, lname, address, longitude, latitude],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to get all locations
+app.get("/api/location", (req, res) => {
+  db.query("SELECT * FROM location", (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    res.send(result);
+  });
 });
 
 app.listen(PORT, () => {

@@ -1,22 +1,15 @@
 import LeftSideMenu from "../Components/LeftSideMenu";
 import ucf_logo from "../assets/ucf_logo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function () {
-  const [orgs, setOrgs] = useState([
-    { id: 1, organization: "Lorem Ipsum" },
-    { id: 2, organization: "Lorem Ipsum" },
-    { id: 3, organization: "Lorem Ipsum" },
-    { id: 4, organization: "Lorem Ipsum" },
-    { id: 5, organization: "Lorem Ipsum" },
-    { id: 6, organization: "Lorem Ipsum" },
-    { id: 7, organization: "Lorem Ipsum" },
-    { id: 8, organization: "Lorem Ipsum" },
-    { id: 9, organization: "Lorem Ipsum" },
-    { id: 10, organization: "Lorem Ipsum" },
-  ]);
+  const [orgs, setOrgs] = useState([]);
   const [organization, setOrganization] = useState("");
   const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+    getRSOs();
+  }, []);
 
   return (
     <LeftSideMenu>
@@ -47,7 +40,7 @@ export default function () {
               </thead>
               <tbody>
                 {orgs.map((o, i) => (
-                  <Row key={i} id={o.id} organization={o.organization} />
+                  <Row key={i} id={o.rso_id} organization={o.name} />
                 ))}
               </tbody>
             </table>
@@ -87,7 +80,20 @@ export default function () {
 
             <button
               className="w-fit bg-[#ffcc00] rounded px-3 py-1 hover:opacity-50 ml-3"
-              onClick={() => console.log("submitted")}
+              onClick={() => {
+                const id = Math.floor(Date.now() * Math.random());
+
+                fetch(`${import.meta.env.VITE_API_URL}/rso/${id}`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ name: organization }),
+                }).then(() => {
+                  getRSOs();
+                  setOrganization("");
+                });
+              }}
             >
               Submit
             </button>
@@ -117,5 +123,16 @@ export default function () {
         <td className="px-6 py-4">{organization}</td>
       </tr>
     );
+  }
+
+  function getRSOs() {
+    fetch(`${import.meta.env.VITE_API_URL}/rso`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setOrgs(data));
   }
 }

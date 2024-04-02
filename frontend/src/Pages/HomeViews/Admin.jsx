@@ -10,20 +10,14 @@ import "react-dropdown/style.css";
 export default function () {
   const [focusedEvent, setFocusedEvent] = useState("");
   const [events, setEvents] = useState([]);
-  const [eventType, setEventType] = useState("");
-  const [rso, setRso] = useState("");
-  const [eventName, setEventName] = useState("");
-  const [address, setAddress] = useState("");
-  const [creatingLocation, setCreatingLocation] = useState(false);
-  const [locationAddress, setLocationAddress] = useState("");
-  const [locationName, setLocationName] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [latitude, setLatitude] = useState("");
+
+  const [orgs, setOrgs] = useState([]);
 
   const { setShowRightSideMenu } = useContext(Context);
 
   useEffect(() => {
     getevents();
+    getRSOs();
   }, []);
 
   return (
@@ -76,10 +70,11 @@ export default function () {
         return (
           <div
             key={e.event_id}
-            className="border rounded-lg shadow px-8 py-5 mx-auto w-72 h-32"
+            className="border rounded-lg shadow px-8 py-5 mx-auto w-72"
           >
-            <p className="font-bold">{formatDate(date)}</p>
-            <p>{e.description}</p>
+            <p className="text-lg font-bold">{e.ename}</p>
+            <p className="text-sm text-gray-400">{formatDate(date)}</p>
+            <p className="truncate mt-2 mb-4">{e.description}</p>
             <div className="flex">
               <div
                 className="mr-auto text-red-400 cursor-pointer hover:opacity-50"
@@ -128,6 +123,15 @@ export default function () {
   function EventForm() {
     const [time, setTime] = useState("");
     const [description, setDescription] = useState("");
+    const [eventType, setEventType] = useState("");
+    const [rso, setRso] = useState("");
+    const [eventName, setEventName] = useState("");
+    const [address, setAddress] = useState("");
+    const [creatingLocation, setCreatingLocation] = useState(false);
+    const [locationAddress, setLocationAddress] = useState("");
+    const [locationName, setLocationName] = useState("");
+    const [longitude, setLongitude] = useState("");
+    const [latitude, setLatitude] = useState("");
 
     return (
       <div className="grid grid-cols-1 w-fit space-y-5 mt-5">
@@ -150,7 +154,7 @@ export default function () {
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
-        {/* Address */}
+        {/* Location */}
         {!creatingLocation ? (
           <div>
             <Dropdown
@@ -236,18 +240,46 @@ export default function () {
         {/* RSO */}
         {eventType === "RSO Event" && (
           <Dropdown
-            options={["RSO 1", "RSO 2", "RSO 3", "RSO 4", "RSO 5"]}
+            options={orgs.map((o) => o.name)}
             placeholder="Select an RSO"
             controlClassName="border rounded-lg shadow w-fit w-full"
             menuClassName="border-none rounded-lg shadow-lg w-fit w-full"
-            // value={eventType}
-            // onChange={(e) => setEventType(e.value)}
+            value={rso}
+            onChange={(e) => setRso(e.value)}
           />
         )}
         {/* Submit Form for creating new event */}
         <button
           className="w-fit bg-[#ffcc00] rounded px-3 py-1 hover:opacity-50"
-          onClick={() => addNewEvent(time, description).then(getevents)}
+          onClick={() => {
+            if (
+              eventName === "" ||
+              description === "" ||
+              time === "" ||
+              eventType === ""
+            ) {
+              alert("Please fill in all fields");
+              return;
+            } else {
+              if (creatingLocation) {
+                const id = Math.floor(Date.now() * Math.random());
+
+                fetch(`${import.meta.env.VITE_API_URL}/location/${id}`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    lname: locationName,
+                    address: locationAddress,
+                    longitude: longitude,
+                    latitude: latitude,
+                  }),
+                });
+              }
+              addNewEvent(time, description, eventName).then(getevents);
+            }
+          }}
         >
           Submit
         </button>
@@ -256,7 +288,7 @@ export default function () {
   }
 
   // Adds new event to backend
-  async function addNewEvent(time, description) {
+  async function addNewEvent(time, description, name) {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
       method: "POST",
       headers: {
@@ -266,9 +298,21 @@ export default function () {
         event_id: Date.now() * Math.random(),
         time: time,
         description: description,
+        ename: name,
       }),
     });
     const data = await response.json();
     return data;
+  }
+
+  function getRSOs() {
+    fetch(`${import.meta.env.VITE_API_URL}/rso`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setOrgs(data));
   }
 }
