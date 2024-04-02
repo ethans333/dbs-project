@@ -146,7 +146,7 @@ export default function () {
         />
         {/* Description */}
         <textarea
-          className="border rounded shadow w-fit min-w-80 px-5 py-4"
+          className="border rounded shadow min-w-80 px-5 py-4"
           cols={30}
           rows={10}
           name="description"
