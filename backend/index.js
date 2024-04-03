@@ -325,3 +325,159 @@ app.delete("/api/user/:user_id", (req, res) => {
     res.send(result);
   });
 });
+
+// Route to get user type
+app.get("/api/user/type/:user_id", async (req, res) => {
+  const user_id = req.params.user_id;
+
+  let userType = 3;
+
+  try {
+    const superAdminQuery = await new Promise((resolve, reject) => {
+      db.query(
+        "SELECT * FROM super_admins WHERE id = ?",
+        [user_id],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+
+    if (superAdminQuery.length > 0) {
+      userType = 1; // SUPER_ADMIN
+    }
+
+    const adminQuery = await new Promise((resolve, reject) => {
+      db.query(
+        "SELECT * FROM admins WHERE id = ?",
+        [user_id],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+
+    if (adminQuery.length > 0) {
+      userType = 2; // ADMIN
+    }
+
+    res.send({
+      userType: userType,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Route for user to join an RSO
+app.post("/api/user/join-rso/:user_id/:rso_id", (req, res) => {
+  const user_id = req.params.user_id;
+  const rso_id = req.params.rso_id;
+
+  db.query(
+    "INSERT INTO users_joins_rsos (user_id, rso_id) VALUES (?, ?)",
+    [user_id, rso_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route for user to leave an RSO
+app.delete("/api/user/leave-rso/:user_id/:rso_id", (req, res) => {
+  const user_id = req.params.user_id;
+  const rso_id = req.params.rso_id;
+
+  db.query(
+    "DELETE FROM users_joins_rsos WHERE user_id = ? AND rso_id = ?",
+    [user_id, rso_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to get all RSOs a user is in
+app.get("/api/user/rso/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  db.query(
+    "SELECT rso_id FROM users_joins_rsos WHERE user_id = ?",
+    [user_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to get all admins
+app.get("/api/admin", (req, res) => {
+  db.query(
+    "SELECT u.id, u.username FROM users u JOIN admins a ON u.id = a.id",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+        return;
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to get all users that arent admins
+app.get("/api/user/not-admin", (req, res) => {
+  db.query(
+    "SELECT id, username FROM users WHERE NOT EXISTS (SELECT 1 FROM admins WHERE admins.id = users.id) AND NOT EXISTS (SELECT 1 FROM super_admins WHERE super_admins.id = users.id)",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+        return;
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to add an admin
+app.post("/api/admin/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  db.query("INSERT INTO admins (id) VALUES (?)", [user_id], (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    res.send(result);
+  });
+});
+
+// Route to delete an admin
+app.delete("/api/admin/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  db.query("DELETE FROM admins WHERE id = ?", [user_id], (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    res.send(result);
+  });
+});

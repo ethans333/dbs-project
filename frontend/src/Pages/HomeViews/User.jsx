@@ -55,7 +55,7 @@ export default function () {
   // Displays events as list of cards
   function showEvents() {
     return events.length === 0 ? ( // If no events, show loading cards
-      <div className="space-y-5">
+      <div className="space-x-5 flex">
         <LoadingEventCard />
         <LoadingEventCard />
         <LoadingEventCard />

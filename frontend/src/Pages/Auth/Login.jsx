@@ -42,7 +42,6 @@ export default function loginForm() {
 
       setUsername("");
       setPassword("");
-      console.log(username, password);
     }
   };
 

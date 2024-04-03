@@ -13,13 +13,13 @@ function renderViews() {
   const { userType } = useContext(Context);
 
   switch (userType) {
-    case import.meta.env.VITE_SUPER_ADMIN:
+    case 1: // Super Admin
       return <AdminHome />;
-    case import.meta.env.VITE_ADMIN:
+    case 2: // Admin
       return <AdminHome />;
-    case import.meta.env.VITE_USER:
+    case 3: // User
       return <UserHome />;
     default:
-      return <div>Invalid User Type</div>;
+      return <div>Invalid User Type {`(${userType})`}</div>;
   }
 }

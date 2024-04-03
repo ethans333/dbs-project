@@ -122,7 +122,11 @@ function Rating({ rating }) {
 
   for (let i = 0; i < maxRating; i++)
     stars.push(
-      <img className="w-4" src={i < rating ? star_filled : star_empty} />
+      <img
+        key={i}
+        className="w-4"
+        src={i < rating ? star_filled : star_empty}
+      />
     );
 
   return <div className="flex">{stars}</div>;
