@@ -25,7 +25,10 @@ app.get("/api/events", (req, res) => {
 
 // Route to create a new post
 app.post("/api/events", (req, res) => {
-  const { event_id, time, description, ename } = req.body;
+  const { event_id, time, description, ename, eventType, associated_id } =
+    req.body;
+
+  // Create the event
   db.query(
     "INSERT INTO events (event_id, time, description, ename) VALUES (?, ?, ?, ?)",
     [event_id, time, description, ename],
@@ -36,6 +39,46 @@ app.post("/api/events", (req, res) => {
       res.send(result);
     }
   );
+
+  // Add the event based on event type to appropriate table
+  switch (eventType.toLowerCase()) {
+    case "rso event":
+      db.query(
+        "INSERT INTO rso_events_owns (rso_id, event_id) VALUES (?, ?)",
+        [associated_id, event_id],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+      break;
+    case "private event":
+      db.query(
+        "INSERT INTO private_events_creates (creator_id, event_id) VALUES (?, ?)",
+        [associated_id, event_id],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+      break;
+    case "public event":
+      db.query(
+        "INSERT INTO public_events_creates (creator_id, event_id) VALUES (?, ?)",
+        [associated_id, event_id],
+        (err, result) => {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+      break;
+    default:
+      console.log("Error: Invalid event type.");
+      break;
+  }
 });
 
 // Route to get a specific event by ID
@@ -197,4 +240,88 @@ app.get("/api/location", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}/api`);
+});
+
+/*
+
+  User
+
+*/
+
+// Route to create a new user
+app.post("/api/user/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+  const { username, password } = req.body;
+  db.query(
+    "INSERT INTO users (id, username, password) VALUES (?, ?, ?)",
+    [user_id, username, password],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to verify a users credentials
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+
+  db.query(
+    "SELECT * FROM users WHERE username = ? AND password = ?",
+    [username, password],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to reset a users username
+app.put("/api/user/change-username/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+  const { username } = req.body;
+
+  db.query(
+    "UPDATE users SET username = ? WHERE id = ?",
+    [username, user_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to reset a users password
+app.put("/api/user/change-password/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+  const { password } = req.body;
+
+  db.query(
+    "UPDATE users SET password = ? WHERE id = ?",
+    [password, user_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to delete a user
+app.delete("/api/user/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  db.query("DELETE FROM users WHERE id = ?", [user_id], (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    res.send(result);
+  });
 });

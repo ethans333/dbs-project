@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ucf_logo from "../../assets/ucf_logo.png";
 import CommentSidebar from "./Components/CommentSidebar";
 import { formatDate } from "../../Components/helpers";
-import { useContext } from "react";
 import { Context } from "../../ProjectContext";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
@@ -12,12 +11,16 @@ export default function () {
   const [events, setEvents] = useState([]);
 
   const [orgs, setOrgs] = useState([]);
+  const [locations, setLocations] = useState([]);
+
+  const { userId } = useContext(Context);
 
   const { setShowRightSideMenu } = useContext(Context);
 
   useEffect(() => {
     getevents();
     getRSOs();
+    getLocations();
   }, []);
 
   return (
@@ -36,7 +39,9 @@ export default function () {
           <EventForm />
         </div>
         {/* Right Side */}
-        <div className="space-y-5">{showEvents()}</div>
+        <div className="space-y-5 overflow-y-scroll max-h-[50vh] pb-1">
+          {showEvents()}
+        </div>
         {/* Right Sidebar */}
         <CommentSidebar event_id={focusedEvent} />
       </div>
@@ -65,50 +70,54 @@ export default function () {
       </div>
     ) : (
       // If events, show event cards
-      events.map((e) => {
-        const date = new Date(e.time);
-        return (
-          <div
-            key={e.event_id}
-            className="border rounded-lg shadow px-8 py-5 mx-auto w-72"
-          >
-            <p className="text-lg font-bold">{e.ename}</p>
-            <p className="text-sm text-gray-400">{formatDate(date)}</p>
-            <p className="truncate mt-2 mb-4">{e.description}</p>
-            <div className="flex">
-              <div
-                className="mr-auto text-red-400 cursor-pointer hover:opacity-50"
-                onClick={() => {
-                  // Delete event
-                  if (confirm("Are you sure you want to delete this event?")) {
-                    fetch(
-                      `${import.meta.env.VITE_API_URL}/events/${e.event_id}`,
-                      {
-                        method: "DELETE",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                      }
-                    ).then(() => getevents());
-                  }
-                }}
-              >
-                Delete
-              </div>
-              <div
-                className="text-blue-500 cursor-pointer hover:opacity-50"
-                onClick={() => {
-                  setShowRightSideMenu(true);
-                  console.log(e.event_id);
-                  setFocusedEvent(e.event_id);
-                }}
-              >
-                Comment
+      events
+        .map((e) => {
+          const date = new Date(e.time);
+          return (
+            <div
+              key={e.event_id}
+              className="border rounded-lg shadow px-8 py-5 mx-auto w-72"
+            >
+              <p className="text-lg font-bold">{e.ename}</p>
+              <p className="text-sm text-gray-400">{formatDate(date)}</p>
+              <p className="truncate mt-2 mb-4">{e.description}</p>
+              <div className="flex">
+                <div
+                  className="mr-auto text-red-400 cursor-pointer hover:opacity-50"
+                  onClick={() => {
+                    // Delete event
+                    if (
+                      confirm("Are you sure you want to delete this event?")
+                    ) {
+                      fetch(
+                        `${import.meta.env.VITE_API_URL}/events/${e.event_id}`,
+                        {
+                          method: "DELETE",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                        }
+                      ).then(() => getevents());
+                    }
+                  }}
+                >
+                  Delete
+                </div>
+                <div
+                  className="text-blue-500 cursor-pointer hover:opacity-50"
+                  onClick={() => {
+                    setShowRightSideMenu(true);
+                    console.log(e.event_id);
+                    setFocusedEvent(e.event_id);
+                  }}
+                >
+                  Comment
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })
+          );
+        })
+        .reverse()
     );
   }
 
@@ -158,8 +167,8 @@ export default function () {
         {!creatingLocation ? (
           <div>
             <Dropdown
-              options={["Location A", "Location B", "Location C"]}
-              placeholder="Event Address"
+              options={locations.map((l) => l.lname)}
+              placeholder="Event Location"
               controlClassName="border rounded-lg shadow w-fit w-full"
               menuClassName="border-none rounded-lg shadow-lg w-fit w-full"
               value={address}
@@ -277,7 +286,22 @@ export default function () {
                   }),
                 });
               }
-              addNewEvent(time, description, eventName).then(getevents);
+
+              let associatedId;
+
+              if (eventType === "RSO Event") {
+                associatedId = orgs.filter((o) => o.name == rso)[0].rso_id;
+              } else {
+                associatedId = userId;
+              }
+
+              addNewEvent(
+                time,
+                description,
+                eventName,
+                eventType,
+                associatedId
+              ).then(getevents);
             }
           }}
         >
@@ -288,7 +312,7 @@ export default function () {
   }
 
   // Adds new event to backend
-  async function addNewEvent(time, description, name) {
+  async function addNewEvent(time, description, name, eventType, associatedId) {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
       method: "POST",
       headers: {
@@ -299,6 +323,8 @@ export default function () {
         time: time,
         description: description,
         ename: name,
+        eventType: eventType,
+        associated_id: associatedId,
       }),
     });
     const data = await response.json();
@@ -314,5 +340,16 @@ export default function () {
     })
       .then((res) => res.json())
       .then((data) => setOrgs(data));
+  }
+
+  function getLocations() {
+    fetch(`${import.meta.env.VITE_API_URL}/location`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setLocations(data));
   }
 }

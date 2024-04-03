@@ -67,10 +67,11 @@ export default function () {
         return (
           <div
             key={e.event_id}
-            className="border rounded-lg shadow w-72 h-32 px-8 py-5 mx-5 my-2"
+            className="border rounded-lg shadow px-8 py-5 mx-auto w-72 mt-3"
           >
-            <p className="font-bold">{formatDate(date)}</p>
-            <p>{e.description}</p>
+            <p className="text-lg font-bold">{e.ename}</p>
+            <p className="text-sm text-gray-400">{formatDate(date)}</p>
+            <p className="truncate mt-2 mb-4">{e.description}</p>
             <div
               className="text-blue-500 cursor-pointer hover:opacity-50 text-right relative bottom-0"
               onClick={() => {
