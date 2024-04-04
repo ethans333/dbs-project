@@ -9,7 +9,7 @@ export default function loginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setUserId } = useContext(Context);
+  const { setUserType } = useContext(Context);
 
   const navigate = useNavigate();
 
@@ -34,7 +34,6 @@ export default function loginForm() {
           if (data.length === 0) {
             alert("Invalid username or password");
           } else {
-            console.log(data);
             localStorage.setItem("userId", data[0].id);
             navigate("/");
           }
@@ -98,9 +97,6 @@ export default function loginForm() {
               >
                 Don't have an account?
               </a>
-            </p>
-            <p className="links">
-              <a onClick={() => {}}>Forgot Password?</a>
             </p>
           </form>
         </div>

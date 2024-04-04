@@ -270,8 +270,11 @@ export default function () {
               alert("Please fill in all fields");
               return;
             } else {
+              let lid;
+
               if (creatingLocation) {
-                const id = Math.floor(Date.now() * Math.random());
+                lid = Math.floor(Date.now() * Math.random());
+                setLocationId(id);
 
                 fetch(`${import.meta.env.VITE_API_URL}/location/${id}`, {
                   method: "POST",
@@ -285,14 +288,19 @@ export default function () {
                     latitude: latitude,
                   }),
                 });
+              } else {
+                lid = locations.filter((l) => l.lname == address)[0]
+                  .location_id;
               }
+
+              console.log(lid);
 
               let associatedId;
 
               if (eventType === "RSO Event") {
                 associatedId = orgs.filter((o) => o.name == rso)[0].rso_id;
               } else {
-                associatedId = userId;
+                associatedId = localStorage.getItem("userId");
               }
 
               addNewEvent(
@@ -300,7 +308,8 @@ export default function () {
                 description,
                 eventName,
                 eventType,
-                associatedId
+                associatedId,
+                lid
               ).then(getevents);
             }
           }}
@@ -312,7 +321,14 @@ export default function () {
   }
 
   // Adds new event to backend
-  async function addNewEvent(time, description, name, eventType, associatedId) {
+  async function addNewEvent(
+    time,
+    description,
+    name,
+    eventType,
+    associatedId,
+    locationId
+  ) {
     const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
       method: "POST",
       headers: {
@@ -325,6 +341,7 @@ export default function () {
         ename: name,
         eventType: eventType,
         associated_id: associatedId,
+        location_id: locationId,
       }),
     });
     const data = await response.json();

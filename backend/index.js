@@ -25,8 +25,15 @@ app.get("/api/events", (req, res) => {
 
 // Route to create a new post
 app.post("/api/events", (req, res) => {
-  const { event_id, time, description, ename, eventType, associated_id } =
-    req.body;
+  const {
+    event_id,
+    time,
+    description,
+    ename,
+    eventType,
+    associated_id,
+    location_id,
+  } = req.body;
 
   // Create the event
   db.query(
@@ -37,6 +44,17 @@ app.post("/api/events", (req, res) => {
         console.log(err);
       }
       res.send(result);
+    }
+  );
+
+  // Add event to location
+  db.query(
+    "INSERT INTO events_at_location (location_id, event_id) VALUES (?, ?)",
+    [location_id, event_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
     }
   );
 
@@ -146,10 +164,12 @@ app.delete("/api/events/:id", (req, res) => {
 // Route to add a comment
 app.post("/api/comments/:event_id", (req, res) => {
   const event_id = req.params.event_id;
-  const { user_id, text, rating, date } = req.body;
+  const { user_id, text, date } = req.body;
+  const comment_id = Math.floor(Math.random() * Date.now());
+
   db.query(
-    "INSERT INTO comments (event_id, user_id, text, rating, timestamp) VALUES (?, ?, ?, ?, ?)",
-    [event_id, user_id, text, rating, date],
+    "INSERT INTO comments (comment_id, event_id, user_id, text, number_of_ratings, total_rating, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+    [comment_id, event_id, user_id, text, 0, 0, date],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -168,6 +188,25 @@ app.get("/api/comments/:event_id", (req, res) => {
     (err, result) => {
       if (err) {
         console.log(err);
+      }
+      res.send(result);
+    }
+  );
+});
+
+// Route to add rating to a comment
+app.put("/api/comments/rating/:comment_id", (req, res) => {
+  const comment_id = req.params.comment_id;
+  const { rating } = req.body;
+
+  db.query(
+    "UPDATE comments SET number_of_ratings = number_of_ratings + 1, total_rating = total_rating + ? WHERE comment_id = ?",
+    [rating, comment_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error updating rating");
+        return;
       }
       res.send(result);
     }

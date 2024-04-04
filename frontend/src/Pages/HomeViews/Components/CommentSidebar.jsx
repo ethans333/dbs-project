@@ -41,8 +41,11 @@ export default function ({ event_id }) {
               <CommentCard
                 key={comment.comment_id}
                 text={comment.text}
-                rating={3}
+                rating={Math.ceil(
+                  comment.total_rating / comment.number_of_ratings
+                )}
                 timestamp={comment.timestamp}
+                comment_id={comment.comment_id}
               />
             ))
           )}
@@ -91,7 +94,7 @@ export default function ({ event_id }) {
       },
       body: JSON.stringify({
         text: commentText,
-        user_id: userId,
+        user_id: localStorage.getItem("userId"),
         rating: 0,
         date: Date.now(),
       }),
@@ -100,34 +103,51 @@ export default function ({ event_id }) {
       setCommentText("");
     });
   }
-}
 
-function CommentCard({ text, rating, timestamp }) {
-  return (
-    <div className="rounded-lg shadow p-7 space-y-3">
-      <div className="flex">
-        <Rating rating={rating} />
-        <p className="text-sm text-gray-400 text-right ml-auto">
-          {formatDate(timestamp)}
-        </p>
+  function CommentCard({ text, rating, timestamp, comment_id }) {
+    return (
+      <div className="rounded-lg shadow p-7 space-y-3">
+        <div className="flex">
+          <Rating rating={rating} comment_id={comment_id} />
+          <p className="text-sm text-gray-400 text-right ml-auto">
+            {formatDate(timestamp)}
+          </p>
+        </div>
+        <div>{text}</div>
       </div>
-      <div>{text}</div>
-    </div>
-  );
-}
-
-function Rating({ rating }) {
-  const maxRating = 5;
-  const stars = [];
-
-  for (let i = 0; i < maxRating; i++)
-    stars.push(
-      <img
-        key={i}
-        className="w-4"
-        src={i < rating ? star_filled : star_empty}
-      />
     );
+  }
 
-  return <div className="flex">{stars}</div>;
+  function Rating({ rating, comment_id }) {
+    const maxRating = 5;
+    const stars = [];
+
+    for (let i = 0; i < maxRating; i++)
+      stars.push(
+        <img
+          key={i}
+          className="w-4 hover:opacity-50 cursor-pointer"
+          src={i < rating ? star_filled : star_empty}
+          onClick={() => {
+            // Rate comment
+            fetch(
+              `${import.meta.env.VITE_API_URL}/comments/rating/${comment_id}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  rating: i + 1,
+                }),
+              }
+            ).then(() => {
+              getComments();
+            });
+          }}
+        />
+      );
+
+    return <div className="flex">{stars}</div>;
+  }
 }

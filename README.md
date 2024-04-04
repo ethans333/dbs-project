@@ -1,11 +1,11 @@
 # Database Systems Project
 
 ## To Do
-- [ ] Admins & Super Admins creating private events. [broken]
-- [ ] When you first login it doesnt update your user type.
-- [ ] Comment voting.
-- [ ] Events at location.
-- [ ] Admins create rsos
+- [x] Admins & Super Admins creating private events. [broken]
+- [ ] When you first login it doesnt update your user type. (Just refresh the page)
+- [x] Comment voting.
+- [x] Events at location.
+- [x] Admins create rsos
 - [ ] Set up create table exercise to team can implement triggers.
 
 ## To Run
