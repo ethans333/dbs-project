@@ -7,4 +7,4 @@ What I need from you guys is
 
 2. Once that is done I need you guys to do a ton of front end testing to makesure there isn't any bugs or errors and everything operates as intended.
 
-The bulk of it is done im relying on you all to finish the little of whats remaining. Message me on discord if you have any questions.
+The bulk of it is done im relying on you all to finish the little bit of whats remaining. Message me on discord if you have any questions.
