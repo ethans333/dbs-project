@@ -371,6 +371,23 @@ app.post("/api/comments/:event_id", (req, res) => {
   );
 });
 
+// Delete comments api
+// Route to delete a comment by ID
+app.delete("/api/comments/:comment_id", (req, res) => {
+  const comment_id = req.params.comment_id;
+  db.query(
+    "DELETE FROM comments WHERE comment_id = ?",
+    [comment_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Failed to delete comment: " + err.message);
+      } else {
+        res.send("Comment deleted successfully.");
+      }
+    }
+  );
+});
 
 
 
@@ -408,6 +425,25 @@ app.put("/api/comments/rating/:comment_id", (req, res) => {
         return;
       }
       res.send(result);
+    }
+  );
+});
+// api for editing comments
+// Route to edit a comment by ID
+app.put("/api/comments/:comment_id", (req, res) => {
+  const comment_id = req.params.comment_id;
+  const { newContent } = req.body;
+
+  db.query(
+    "UPDATE comments SET content = ? WHERE comment_id = ?",
+    [newContent, comment_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error updating comment");
+        return;
+      }
+      res.send("Comment updated successfully.");
     }
   );
 });
