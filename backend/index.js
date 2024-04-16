@@ -435,7 +435,7 @@ app.put("/api/comments/:comment_id", (req, res) => {
   const { newContent } = req.body;
 
   db.query(
-    "UPDATE comments SET content = ? WHERE comment_id = ?",
+    "UPDATE comments SET text = ? WHERE comment_id = ?",
     [newContent, comment_id],
     (err, result) => {
       if (err) {

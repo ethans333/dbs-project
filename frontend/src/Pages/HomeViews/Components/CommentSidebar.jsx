@@ -114,6 +114,10 @@ export default function ({ event_id }) {
           </p>
         </div>
         <div>{text}</div>
+        <div className="flex w-full space-x-32">
+          <div onClick={editComment} className="text-blue-500 cursor-pointer hover:opacity-50">Edit</div>
+          <div onClick={deleteComment} className="text-red-500 cursor-pointer hover:opacity-50">Delete</div>
+        </div>
       </div>
     );
   }
@@ -149,5 +153,20 @@ export default function ({ event_id }) {
       );
 
     return <div className="flex">{stars}</div>;
+  }
+
+  function deleteComment (comment_id) {
+    console.log("comment deleted");
+    fetch(`${import.meta.env.VITE_API_URL}/comments/${event_id}/${comment_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(() => getComments());
+  }
+
+  function editComment () {
+    console.log("comment edited");
+    getComments();
   }
 }
