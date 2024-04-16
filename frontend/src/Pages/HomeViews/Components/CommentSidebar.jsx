@@ -105,7 +105,7 @@ export default function ({ event_id }) {
   }
 
   function CommentCard({ text, rating, timestamp, comment_id }) {
-
+    const { userType } = useContext(Context);
     const [newText, setNewText] = useState(text);
 
     return (
@@ -117,14 +117,17 @@ export default function ({ event_id }) {
           </p>
         </div>
         <div>{text}</div>
-        <input className="border rounded-full" type="text" value={newText} onChange={(e) => setNewText(e.target.value)} placeholder="New Comment"/>
-        <div className="flex w-full space-x-32">
+        {userType != 3 && <input className="border rounded-full" type="text" value={newText} onChange={(e) => setNewText(e.target.value)} placeholder="New Comment"/>}
+
+{userType != 3 &&         
+
+<div className="flex w-full space-x-32">
           <div onClick={() => {
             if (newText == "") return;
             editComment(comment_id, newText).then(() => setNewText(""));
           }} className="text-blue-500 cursor-pointer hover:opacity-50">Edit</div>
           <div onClick={() => deleteComment(comment_id)} className="text-red-500 cursor-pointer hover:opacity-50">Delete</div>
-        </div>
+        </div>}
       </div>
     );
   }

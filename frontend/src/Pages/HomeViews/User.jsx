@@ -29,7 +29,7 @@ export default function () {
       <div className="flex">
         <img src={ucf_logo} className="w-16" />
         <div className="font-bold my-auto ml-5 text-3xl">
-          Add or Browse Events
+          Browse Events
         </div>
       </div>
       <div className="mt-[3vh]">
