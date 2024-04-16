@@ -726,21 +726,25 @@ app.delete("/api/user/leave-rso", (req, res) => {
   );
 });
 
-// Route to get all RSOs a user is in
-app.get("/api/user/rso/:user_id", (req, res) => {
+// Route to leave an RSO
+app.delete("/api/user/leave-rso/:user_id/:rso_id", (req, res) => {
   const user_id = req.params.user_id;
+  const rso_id = req.params.rso_id;
 
   db.query(
-    "SELECT rso_id FROM users_joins_rsos WHERE user_id = ?",
-    [user_id],
+    "DELETE FROM users_joins_rsos WHERE user_id = ? AND rso_id = ?",
+    [user_id, rso_id],
     (err, result) => {
       if (err) {
         console.log(err);
+        res.status(500).send("Failed to leave RSO: " + err.message);
+      } else {
+        res.send("Left RSO successfully.");
       }
-      res.send(result);
     }
   );
 });
+
 
 // Route to get all admins
 app.get("/api/admin", (req, res) => {
