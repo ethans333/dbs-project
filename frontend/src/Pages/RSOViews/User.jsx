@@ -7,7 +7,7 @@ export default function () {
 
   useEffect(() => {
     getRSOs();
-    getJoinedRSOs();
+    getJoinedRSOs();  
   }, []);
 
   return (
@@ -113,6 +113,7 @@ export default function () {
       }
     ).then(async (res) => {
       const data = await res.json();
+      console.log("data")
       setJoinedRSOs(data.map((rso) => rso.rso_id));
     });
   }
@@ -121,13 +122,12 @@ export default function () {
 
 
     fetch(
-      `${import.meta.env.VITE_API_URL}/user/leave-rso`,
+      `${import.meta.env.VITE_API_URL}/user/leave-rso/${localStorage.getItem("userId")}/${rsoId}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ rso_id: rsoId, user_id: localStorage.getItem("userId")}),
       }
     ).then(() => {
       getRSOs();

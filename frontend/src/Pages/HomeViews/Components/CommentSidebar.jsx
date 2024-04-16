@@ -105,6 +105,9 @@ export default function ({ event_id }) {
   }
 
   function CommentCard({ text, rating, timestamp, comment_id }) {
+
+    const [newText, setNewText] = useState(text);
+
     return (
       <div className="rounded-lg shadow p-7 space-y-3">
         <div className="flex">
@@ -114,9 +117,13 @@ export default function ({ event_id }) {
           </p>
         </div>
         <div>{text}</div>
+        <input className="border rounded-full" type="text" value={newText} onChange={(e) => setNewText(e.target.value)} placeholder="New Comment"/>
         <div className="flex w-full space-x-32">
-          <div onClick={editComment} className="text-blue-500 cursor-pointer hover:opacity-50">Edit</div>
-          <div onClick={deleteComment} className="text-red-500 cursor-pointer hover:opacity-50">Delete</div>
+          <div onClick={() => {
+            if (newText == "") return;
+            editComment(comment_id, newText).then(() => setNewText(""));
+          }} className="text-blue-500 cursor-pointer hover:opacity-50">Edit</div>
+          <div onClick={() => deleteComment(comment_id)} className="text-red-500 cursor-pointer hover:opacity-50">Delete</div>
         </div>
       </div>
     );
@@ -157,7 +164,7 @@ export default function ({ event_id }) {
 
   function deleteComment (comment_id) {
     console.log("comment deleted");
-    fetch(`${import.meta.env.VITE_API_URL}/comments/${event_id}/${comment_id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/comments/${comment_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -165,8 +172,16 @@ export default function ({ event_id }) {
     }).then(() => getComments());
   }
 
-  function editComment () {
+  function editComment (comment_id, text) {
     console.log("comment edited");
-    getComments();
+    fetch(`${import.meta.env.VITE_API_URL}/comments/${comment_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: text,
+      }),
+    }).then(() => getComments());
   }
 }

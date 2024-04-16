@@ -432,11 +432,11 @@ app.put("/api/comments/rating/:comment_id", (req, res) => {
 // Route to edit a comment by ID
 app.put("/api/comments/:comment_id", (req, res) => {
   const comment_id = req.params.comment_id;
-  const { newContent } = req.body;
+  const { text } = req.body;
 
   db.query(
     "UPDATE comments SET text = ? WHERE comment_id = ?",
-    [newContent, comment_id],
+    [text, comment_id],
     (err, result) => {
       if (err) {
         console.log(err);
@@ -709,22 +709,22 @@ app.delete("/api/rso/:rso_id", (req, res) => {
 });
 
 // Route to get all RSOs a user is in
-app.delete("/api/user/leave-rso", (req, res) => {
-  const { user_id, rso_id } = req.body;
+// app.delete("/api/user/leave-rso", (req, res) => {
+//   const { user_id, rso_id } = req.body;
 
-  console.log("User ID:", user_id, "RSO ID:", rso_id);
+//   console.log("User ID:", user_id, "RSO ID:", rso_id);
 
-  db.query(
-    "DELETE FROM users_joins_rsos WHERE user_id = ? AND rso_id = ?",
-    [user_id, rso_id],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      }
-      res.send(result);
-    }
-  );
-});
+//   db.query(
+//     "DELETE FROM users_joins_rsos WHERE user_id = ? AND rso_id = ?",
+//     [user_id, rso_id],
+//     (err, result) => {
+//       if (err) {
+//         console.log(err);
+//       }
+//       res.send(result);
+//     }
+//   );
+// });
 
 // Route to leave an RSO
 app.delete("/api/user/leave-rso/:user_id/:rso_id", (req, res) => {
@@ -798,6 +798,22 @@ app.delete("/api/admin/:user_id", (req, res) => {
     }
     res.send(result);
   });
+});
+
+// Route to get all RSOs a user is in
+app.get("/api/user/rso/:user_id", (req, res) => {
+  const user_id = req.params.user_id;
+
+  db.query(
+    "SELECT rso_id FROM users_joins_rsos WHERE user_id = ?",
+    [user_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      res.send(result);
+    }
+  );
 });
 
 
