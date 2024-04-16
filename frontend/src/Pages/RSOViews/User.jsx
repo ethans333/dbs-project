@@ -118,15 +118,16 @@ export default function () {
   }
 
   function leaveRSO(rsoId) {
+
+
     fetch(
-      `${import.meta.env.VITE_API_URL}/user/leave-rso/${localStorage.getItem(
-        "userId"
-      )}/${rsoId}`,
+      `${import.meta.env.VITE_API_URL}/user/leave-rso`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ rso_id: rsoId, user_id: localStorage.getItem("userId")}),
       }
     ).then(() => {
       getRSOs();
